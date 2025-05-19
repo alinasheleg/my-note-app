@@ -1,11 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CategoryForm from '@/components/category/CategoryForm';
 import CategoryList from '@/components/category/CategoryList';
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('categories');
+    if (saved) {
+      setCategories(JSON.parse(saved));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('categories', JSON.stringify(categories));
+  }, [categories]);
 
   const handleAddCategory = (newCategory: string) => {
     if (!categories.includes(newCategory)) {
@@ -15,9 +26,7 @@ export default function CategoriesPage() {
 
   const handleEditCategory = (oldName: string, newName: string) => {
     if (!categories.includes(newName)) {
-      setCategories(
-        categories.map((cat) => (cat === oldName ? newName : cat))
-      );
+      setCategories(categories.map((cat) => (cat === oldName ? newName : cat)));
     }
   };
 
