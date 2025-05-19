@@ -13,11 +13,27 @@ export default function CategoriesPage() {
     }
   };
 
+  const handleEditCategory = (oldName: string, newName: string) => {
+    if (!categories.includes(newName)) {
+      setCategories(
+        categories.map((cat) => (cat === oldName ? newName : cat))
+      );
+    }
+  };
+
+  const handleDeleteCategory = (name: string) => {
+    setCategories(categories.filter((cat) => cat !== name));
+  };
+
   return (
     <>
       <h2>Категории</h2>
       <CategoryForm onAddCategory={handleAddCategory} />
-      <CategoryList categories={categories} />
+      <CategoryList
+        categories={categories}
+        onEdit={handleEditCategory}
+        onDelete={handleDeleteCategory}
+      />
     </>
   );
 }
