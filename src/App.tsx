@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { NotesList } from './components/NotesList';
-import { NoteDetail } from './pages/NoteDetail'; 
+import { NoteDetail } from './pages/NoteDetail';
 import { ArchivedNotes } from './pages/ArchivedNotes';
 
 function App() {
