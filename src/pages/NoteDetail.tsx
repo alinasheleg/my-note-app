@@ -1,16 +1,27 @@
-import { useParams, useNavigate } from 'react-router-dom';
+'use client';
+
+import { useParams, useRouter } from 'next/navigation';
 import { useNotesStore } from '../store/useNotesStore';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export const NoteDetail = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const params = useParams();
+  const router = useRouter();
+  const id = params?.id as string;
+
   const note = useNotesStore((state) => state.notes.find(n => n.id === id));
   const updateNote = useNotesStore((state) => state.updateNote);
 
-  const [title, setTitle] = useState(note?.title || '');
-  const [content, setContent] = useState(note?.content || '');
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (note) {
+      setTitle(note.title);
+      setContent(note.content);
+    }
+  }, [note]);
 
   const handleSave = () => {
     if (!title || !content) {
@@ -18,9 +29,11 @@ export const NoteDetail = () => {
       return;
     }
 
-    updateNote({ id: id!, title, content, archived: false });  // <-- исправлено
-    navigate('/');
+    updateNote({ id, title, content, archived: false });
+    router.push('/');
   };
+
+  if (!note) return <p>Заметка не найдена</p>;
 
   return (
     <div>
