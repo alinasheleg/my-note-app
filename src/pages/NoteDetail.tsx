@@ -18,7 +18,7 @@ export const NoteDetail = () => {
       return;
     }
 
-    updateNote(id!, { id: id!, title, content, archived: false });
+    updateNote({ id: id!, title, content, archived: false });  // <-- исправлено
     navigate('/');
   };
 
