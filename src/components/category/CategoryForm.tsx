@@ -1,12 +1,19 @@
+'use client';
 import { useState } from 'react';
 
-export default function CategoryForm() {
+type Props = {
+  onAddCategory: (name: string) => void;
+};
+
+export default function CategoryForm({ onAddCategory }: Props) {
   const [name, setName] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Добавлена категория:', name);
-    setName('');
+    if (name.trim()) {
+      onAddCategory(name.trim());
+      setName('');
+    }
   };
 
   return (

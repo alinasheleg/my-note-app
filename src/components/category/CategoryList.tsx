@@ -1,11 +1,13 @@
 import CategoryItem from './CategoryItem';
 
-const dummyCategories = ['Работа', 'Учёба', 'Личное'];
+type Props = {
+  categories: string[];
+};
 
-export default function CategoryList() {
+export default function CategoryList({ categories }: Props) {
   return (
     <ul className="list-group">
-      {dummyCategories.map((cat) => (
+      {categories.map((cat) => (
         <CategoryItem key={cat} name={cat} />
       ))}
     </ul>
