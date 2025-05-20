@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function WelcomeBanner() {
   return (
     <div className="text-center py-5 px-3 rounded-4" style={{
@@ -23,14 +25,11 @@ export default function WelcomeBanner() {
       <p className="lead mb-4" style={{ fontWeight: '500' }}>
         Ваши идеи — всегда под рукой.
       </p>
-      <button
-        type="button"
-        className="btn btn-light btn-lg"
-        style={{ fontWeight: '600', color: '#2575fc' }}
-        onClick={() => alert('Начнем добавлять заметки!')}
-      >
-        Добавить заметку
-      </button>
+      
+      <Link href="/add-note" className="btn btn-light btn-lg" style={{ fontWeight: "600", color: "#2575fc" }}>
+  Добавить заметку
+</Link>
+
     </div>
   );
 }

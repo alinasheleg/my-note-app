@@ -13,9 +13,6 @@ export default function NavigationMenu() {
               <Link className="nav-link" href="/notes">Все заметки</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" href="/add-note">Добавить</Link>
-            </li>
-            <li className="nav-item">
               <Link className="nav-link" href="/categories">Категории</Link>
             </li>
             <li className="nav-item">
