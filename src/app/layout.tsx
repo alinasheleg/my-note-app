@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import '../styles/globals.css';
 import NavigationMenu from '@/components/common/NavigationMenu';
 import Footer from '@/components/common/Footer';

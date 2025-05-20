@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useNotesStore } from '../store/useNotesStore';
+import { useMemo } from 'react';
 
 export function NotesList() {
-  const notes = useNotesStore((state) =>
-    state.notes.filter((n) => !n.archived)
+  const allNotes = useNotesStore((state) => state.notes);
+
+  const notes = useMemo(
+    () => allNotes.filter((n) => !n.archived),
+    [allNotes]
   );
 
   return (
