@@ -1,5 +1,6 @@
 'use client';
 
+import Link from "next/link";
 import NoteForm from "@/components/note/NoteForm";
 import { useNotesStore } from "@/store/useNotesStore";
 import { useCategoriesStore } from "@/store/useCategoriesStore"; // импортируем стор категорий
@@ -21,6 +22,13 @@ export default function AddNotePage() {
       <h2 className="text-xl font-semibold mb-4">Добавить заметку</h2>
       {/* Передаём категории в NoteForm */}
       <NoteForm onSubmit={handleAddNote} categories={categories} />
+
+      {/* Кнопка «Все заметки» внизу справа */}
+      <div className="mt-4 d-flex justify-content-end">
+        <Link href="/notes" className="btn btn-outline-primary">
+          Все заметки
+        </Link>
+      </div>
     </div>
   );
 }

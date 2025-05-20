@@ -13,23 +13,31 @@ type CategoriesState = {
   deleteCategory: (id: number) => void;
 };
 
-export const useCategoriesStore = create<CategoriesState>((set) => ({
-  categories: [],
+export const useCategoriesStore = create<CategoriesState>((set) => {
+  // создаём три начальные категории с уникальными id
+  const initialCategories: Category[] = [
+    { id: Date.now(), name: "Учеба" },
+    { id: Date.now() + 1, name: "Работа" },
+  ];
 
-  addCategory: (name) =>
-    set((state) => ({
-      categories: [...state.categories, { id: Date.now(), name }],
-    })),
+  return {
+    categories: initialCategories,
 
-  editCategory: (id, name) =>
-    set((state) => ({
-      categories: state.categories.map((cat) =>
-        cat.id === id ? { ...cat, name } : cat
-      ),
-    })),
+    addCategory: (name) =>
+      set((state) => ({
+        categories: [...state.categories, { id: Date.now(), name }],
+      })),
 
-  deleteCategory: (id) =>
-    set((state) => ({
-      categories: state.categories.filter((cat) => cat.id !== id),
-    })),
-}));
+    editCategory: (id, name) =>
+      set((state) => ({
+        categories: state.categories.map((cat) =>
+          cat.id === id ? { ...cat, name } : cat
+        ),
+      })),
+
+    deleteCategory: (id) =>
+      set((state) => ({
+        categories: state.categories.filter((cat) => cat.id !== id),
+      })),
+  };
+});
