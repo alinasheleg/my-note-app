@@ -1,41 +1,46 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 export type Note = {
-  id: string;
+  id: number;
   title: string;
   content: string;
-  archived: boolean;
+  categoryId: number;
+};
+
+export type Category = {
+  id: number;
+  name: string;
 };
 
 type NotesState = {
   notes: Note[];
-  addNote: (note: Note) => void;
-  updateNote: (note: Note) => void;
-  archiveNote: (id: string) => void;
-  restoreNote: (id: string) => void;
-  deleteNote: (id: string) => void;
+  categories: Category[];
+  addNote: (note: Omit<Note, "id">) => void;
+  addCategory: (name: string) => void;
+  editCategory: (id: number, name: string) => void;
+  deleteCategory: (id: number) => void;
 };
 
 export const useNotesStore = create<NotesState>((set) => ({
   notes: [],
-  addNote: (note) =>
-    set((state) => ({ notes: [...state.notes, note] })),
-  updateNote: (note) =>
+  categories: [],
+  addNote: (note) => {
+    const newNote = { id: Date.now(), ...note };
+    set((state) => ({ notes: [...state.notes, newNote] }));
+  },
+  addCategory: (name) => {
+    const newCategory = { id: Date.now(), name };
+    set((state) => ({ categories: [...state.categories, newCategory] }));
+  },
+  editCategory: (id, name) =>
     set((state) => ({
-      notes: state.notes.map((n) => (n.id === note.id ? note : n)),
-    })),
-  archiveNote: (id) =>
-    set((state) => ({
-      notes: state.notes.map((n) =>
-        n.id === id ? { ...n, archived: true } : n
+      categories: state.categories.map((cat) =>
+        cat.id === id ? { ...cat, name } : cat
       ),
     })),
-  restoreNote: (id) =>
+  deleteCategory: (id) =>
     set((state) => ({
-      notes: state.notes.map((n) =>
-        n.id === id ? { ...n, archived: false } : n
-      ),
+      categories: state.categories.filter((cat) => cat.id !== id),
+      notes: state.notes.filter((note) => note.categoryId !== id), // удалить заметки с удалённой категорией (опционально)
     })),
-  deleteNote: (id) =>
-    set((state) => ({ notes: state.notes.filter((n) => n.id !== id) })),
 }));

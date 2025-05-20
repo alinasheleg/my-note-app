@@ -1,7 +1,6 @@
 'use client';
 
-import ArchivedNotes from "@/pages/ArchivedNotes";
-
+import { ArchivedNotes } from "@/App";
 
 export default function ArchivedPage() {
   return (

@@ -1,53 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import CategoryForm from '@/components/category/CategoryForm';
-import CategoryList from '@/components/category/CategoryList';
+import { useCategoriesStore } from "@/store/useCategoriesStore";
+import CategoryForm from "@/components/category/CategoryForm";
+import CategoryList from "@/components/category/CategoryList";
 
 export default function CategoriesPage() {
-  const [categories, setCategories] = useState<string[]>([]);
-  const [loaded, setLoaded] = useState(false); // флаг что категории загружены
-
-  // Загружаем из localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem('categories');
-    if (saved) {
-      setCategories(JSON.parse(saved));
-    }
-    setLoaded(true); // только после загрузки включаем сохранение
-  }, []);
-
-  // Сохраняем в localStorage, но только после первой загрузки
-  useEffect(() => {
-    if (loaded) {
-      localStorage.setItem('categories', JSON.stringify(categories));
-    }
-  }, [categories, loaded]);
-
-  const handleAddCategory = (newCategory: string) => {
-    if (!categories.includes(newCategory)) {
-      setCategories([...categories, newCategory]);
-    }
-  };
-
-  const handleEditCategory = (oldName: string, newName: string) => {
-    if (!categories.includes(newName)) {
-      setCategories(categories.map((cat) => (cat === oldName ? newName : cat)));
-    }
-  };
-
-  const handleDeleteCategory = (name: string) => {
-    setCategories(categories.filter((cat) => cat !== name));
-  };
+  const categories = useCategoriesStore((state) => state.categories);
+  const addCategory = useCategoriesStore((state) => state.addCategory);
+  const editCategory = useCategoriesStore((state) => state.editCategory);
+  const deleteCategory = useCategoriesStore((state) => state.deleteCategory);
 
   return (
-    <div className="container my-4">
-      <h2>Категории</h2>
-      <CategoryForm onAddCategory={handleAddCategory} />
+    <div className="max-w-md mx-auto py-6">
+      <h2 className="text-xl font-semibold mb-4">Управление категориями</h2>
+      <CategoryForm onAddCategory={addCategory} />
       <CategoryList
         categories={categories}
-        onEdit={handleEditCategory}
-        onDelete={handleDeleteCategory}
+        onEditCategory={editCategory}
+        onDeleteCategory={deleteCategory}
       />
     </div>
   );

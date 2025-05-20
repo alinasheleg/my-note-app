@@ -1,79 +1,68 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from "react";
+import type { Category } from "@/store/useCategoriesStore";
 
-type Props = {
-  onSubmit?: (data: { title: string; text: string; category: string }) => void;
-  initialData?: { title: string; text: string; category: string };
+type NoteFormProps = {
+  onSubmit: (note: { title: string; content: string; categoryId: number }) => void;
+  categories: Category[];
 };
 
-export default function NoteForm({ onSubmit, initialData }: Props) {
-  const [title, setTitle] = useState(initialData?.title || '');
-  const [text, setText] = useState(initialData?.text || '');
-  const [selectedCategory, setSelectedCategory] = useState(initialData?.category || '');
-  const [categories, setCategories] = useState<string[]>([]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('categories');
-    if (saved) {
-      setCategories(JSON.parse(saved));
-    }
-  }, []);
+export default function NoteForm({ onSubmit, categories }: NoteFormProps) {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [categoryId, setCategoryId] = useState<number>(categories.length ? categories[0].id : 0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newNote = { title, text, category: selectedCategory };
-    if (onSubmit) {
-      onSubmit(newNote);
-    } else {
-      console.log('Заметка:', newNote);
-    }
-    // тут можно сохранить в localStorage или отправить в API
+    if (!title.trim() || !content.trim() || !categoryId) return;
+
+    onSubmit({
+      title: title.trim(),
+      content: content.trim(),
+      categoryId,
+    });
+
+    setTitle("");
+    setContent("");
+    setCategoryId(categories.length ? categories[0].id : 0);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="mb-3">
-        <label className="form-label">Заголовок</label>
-        <input
-          type="text"
-          className="form-control"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-      </div>
-
-      <div className="mb-3">
-        <label className="form-label">Текст заметки</label>
-        <textarea
-          className="form-control"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          rows={4}
-          required
-        />
-      </div>
-
-      <div className="mb-3">
-        <label className="form-label">Категория</label>
-        <select
-          className="form-select"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          required
-        >
-          <option value="">Выберите категорию</option>
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <button type="submit" className="btn btn-success">
-        Сохранить
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <input
+        type="text"
+        placeholder="Заголовок"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        className="w-full border px-3 py-2 rounded"
+        required
+      />
+      <textarea
+        placeholder="Содержимое заметки"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        className="w-full border px-3 py-2 rounded"
+        rows={5}
+        required
+      />
+      <select
+        value={categoryId}
+        onChange={(e) => setCategoryId(Number(e.target.value))}
+        className="w-full border px-3 py-2 rounded"
+        required
+      >
+        {categories.map((cat) => (
+          <option key={cat.id} value={cat.id}>
+            {cat.name}
+          </option>
+        ))}
+      </select>
+      <button
+        type="submit"
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      >
+        Сохранить заметку
       </button>
     </form>
   );

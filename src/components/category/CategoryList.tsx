@@ -1,20 +1,25 @@
-import CategoryItem from './CategoryItem';
+'use client';
+
+import { Category } from "@/store/useNotesStore"; 
+import CategoryItem from "./CategoryItem";
 
 type Props = {
-  categories: string[];
-  onEdit: (oldName: string, newName: string) => void;
-  onDelete: (name: string) => void;
+  categories: Category[];
+  onEditCategory: (id: number, name: string) => void;
+  onDeleteCategory: (id: number) => void;
 };
 
-export default function CategoryList({ categories, onEdit, onDelete }: Props) {
+export default function CategoryList({ categories, onEditCategory, onDeleteCategory }: Props) {
+  if (categories.length === 0) return <p>Категорий пока нет.</p>;
+
   return (
-    <ul className="list-group">
-      {categories.map((cat) => (
+    <ul>
+      {categories.map((category) => (
         <CategoryItem
-          key={cat}
-          name={cat}
-          onEdit={onEdit}
-          onDelete={onDelete}
+          key={category.id}
+          category={category}
+          onEditCategory={onEditCategory}
+          onDeleteCategory={onDeleteCategory}
         />
       ))}
     </ul>

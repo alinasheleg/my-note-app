@@ -1,26 +1,23 @@
-import { Link } from 'react-router-dom';
-import { useNotesStore } from '../store/useNotesStore';
-import { useMemo } from 'react';
+// src/components/note/NotesList.tsx
+'use client';
 
-export function NotesList() {
-  const allNotes = useNotesStore((state) => state.notes);
+import { useNotesStore } from "@/store/useNotesStore";
 
-  const notes = useMemo(
-    () => allNotes.filter((n) => !n.archived),
-    [allNotes]
-  );
+export default function NotesList() {
+  const notes = useNotesStore((state) => state.notes);
+
+  if (notes.length === 0) {
+    return <p>Заметок пока нет.</p>;
+  }
 
   return (
-    <div>
-      <h2>Все заметки</h2>
+    <ul>
       {notes.map((note) => (
-        <div key={note.id} className="note-preview">
-          <Link to={`/note/${note.id}`}>
-            <h3>{note.title}</h3>
-            <p>{note.content.slice(0, 100)}...</p>
-          </Link>
-        </div>
+        <li key={note.id} className="border-b py-2">
+          <h3 className="font-bold">{note.title}</h3>
+          <p>{note.content}</p>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }

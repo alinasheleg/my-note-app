@@ -1,31 +1,53 @@
-import { useNotesStore } from '../store/useNotesStore';
-import { useMemo } from 'react';
+import { create } from "zustand";
 
-export default function ArchivedNotes() {
-  const allNotes = useNotesStore((state) => state.notes);
-  const restoreNote = useNotesStore((state) => state.restoreNote);
-  const deleteNote = useNotesStore((state) => state.deleteNote);
+export type Note = {
+  id: number;
+  title: string;
+  content: string;
+  archived?: boolean;
+  deleted?: boolean;
+};
 
-  const notes = useMemo(
-    () => allNotes.filter((n) => n.archived),
-    [allNotes]
-  );
+type NotesState = {
+  notes: Note[];
+  addNote: (note: Omit<Note, "id">) => void;
+  archiveNote: (id: number) => void;
+  deleteNote: (id: number) => void;
+  restoreNote: (id: number) => void;
+  deletePermanently: (id: number) => void;
+};
 
-  return (
-    <div>
-      <h2>Архивированные заметки</h2>
-      {notes.length === 0 ? (
-        <p>Архив пуст.</p>
-      ) : (
-        notes.map((note) => (
-          <div key={note.id} className="note-preview">
-            <h3>{note.title}</h3>
-            <p>{note.content.slice(0, 100)}...</p>
-            <button onClick={() => restoreNote(note.id)}>Восстановить</button>
-            <button onClick={() => deleteNote(note.id)}>Удалить навсегда</button>
-          </div>
-        ))
-      )}
-    </div>
-  );
-}
+export const useNotesStore = create<NotesState>((set) => ({
+  notes: [],
+
+  addNote: (note) =>
+    set((state) => ({
+      notes: [...state.notes, { id: Date.now(), ...note }],
+    })),
+
+  archiveNote: (id) =>
+    set((state) => ({
+      notes: state.notes.map((note) =>
+        note.id === id ? { ...note, archived: true } : note
+      ),
+    })),
+
+  deleteNote: (id) =>
+    set((state) => ({
+      notes: state.notes.map((note) =>
+        note.id === id ? { ...note, deleted: true } : note
+      ),
+    })),
+
+  restoreNote: (id) =>
+    set((state) => ({
+      notes: state.notes.map((note) =>
+        note.id === id ? { ...note, archived: false, deleted: false } : note
+      ),
+    })),
+
+  deletePermanently: (id) =>
+    set((state) => ({
+      notes: state.notes.filter((note) => note.id !== id),
+    })),
+}));
