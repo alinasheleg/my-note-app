@@ -29,41 +29,52 @@ export default function NoteForm({ onSubmit, categories }: NoteFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <input
-        type="text"
-        placeholder="Заголовок"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="w-full border px-3 py-2 rounded"
-        required
-      />
-      <textarea
-        placeholder="Содержимое заметки"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        className="w-full border px-3 py-2 rounded"
-        rows={5}
-        required
-      />
-      <select
-        value={categoryId}
-        onChange={(e) => setCategoryId(Number(e.target.value))}
-        className="w-full border px-3 py-2 rounded"
-        required
-      >
-        {categories.map((cat) => (
-          <option key={cat.id} value={cat.id}>
-            {cat.name}
-          </option>
-        ))}
-      </select>
-      <button
-        type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        Сохранить заметку
-      </button>
+    <form onSubmit={handleSubmit} className="p-4 bg-light border rounded shadow-sm">
+      <div className="mb-3">
+        <label className="form-label fw-semibold">Заголовок</label>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="form-control"
+          placeholder="Введите заголовок"
+          required
+        />
+      </div>
+
+      <div className="mb-3">
+        <label className="form-label fw-semibold">Содержимое</label>
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          className="form-control"
+          placeholder="Введите текст заметки"
+          rows={5}
+          required
+        />
+      </div>
+
+      <div className="mb-3">
+        <label className="form-label fw-semibold">Категория</label>
+        <select
+          value={categoryId}
+          onChange={(e) => setCategoryId(Number(e.target.value))}
+          className="form-select"
+          required
+        >
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="text-end">
+        <button type="submit" className="btn btn-primary">
+          Сохранить заметку
+        </button>
+      </div>
     </form>
   );
 }

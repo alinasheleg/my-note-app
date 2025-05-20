@@ -17,19 +17,16 @@ export default function CategoryForm({ onAddCategory }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
+    <form onSubmit={handleSubmit} className="d-flex align-items-center gap-2 mb-4">
       <input
         type="text"
         placeholder="Название категории"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="flex-grow border px-3 py-2 rounded"
+        className="form-control"
         required
       />
-      <button
-        type="submit"
-        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-      >
+      <button type="submit" className="btn btn-success">
         Добавить
       </button>
     </form>
