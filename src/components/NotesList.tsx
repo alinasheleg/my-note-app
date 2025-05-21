@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useNotesStore } from "@/store/useNotesStore";
 import { useCategoriesStore } from "@/store/useCategoriesStore";
+import Link from 'next/link';
 
 export default function NotesList() {
   const notes = useNotesStore((state) => state.notes);
@@ -80,18 +81,19 @@ export default function NotesList() {
                 </small>
 
                 <div className="mt-3">
-                  <button
-                    className="btn btn-sm btn-outline-primary me-2"
-                    onClick={() => handleEdit(note)}
-                  >
-                    Редактировать
-                  </button>
-                  <button
-                    className="btn btn-sm btn-outline-danger"
-                    onClick={() => deleteNote(note.id)}
-                  >
-                    Удалить
-                  </button>
+                 <Link href={`/notes/${note.id}`} className="btn btn-sm btn-outline-primary me-2">
+  Редактировать
+</Link>
+                 <button
+  className="btn btn-sm btn-outline-danger"
+  onClick={() => {
+    if (confirm("Вы уверены, что хотите удалить эту заметку? Она попадёт в архив.")) {
+      deleteNote(note.id);
+    }
+  }}
+>
+  Удалить
+</button>
                 </div>
               </li>
             );
