@@ -11,14 +11,16 @@ interface NotesState {
   notes: Note[];
   archivedNotes: Note[];
   addNote: (note: Note) => void;
-  deleteNote: (id: number) => void; // удалить из заметок и переместить в архив
-  restoreNote: (id: number) => void; // вернуть из архива в заметки
-  permanentlyDeleteNote: (id: number) => void; // окончательно удалить из архива
+  deleteNote: (id: number) => void;
+  restoreNote: (id: number) => void;
+  permanentlyDeleteNote: (id: number) => void;
   updateNote: (updatedNote: Note) => void;
 }
 
-export const useNotesStore = create<NotesState>((set) => ({
-  notes: [],
+export const useNotesStore = create<NotesState>((set, get) => ({
+  notes: [
+
+  ],
   archivedNotes: [],
 
   addNote: (note) =>
@@ -26,27 +28,23 @@ export const useNotesStore = create<NotesState>((set) => ({
       notes: [...state.notes, note],
     })),
 
-  deleteNote: (id) =>
-    set((state) => {
-      const noteToArchive = state.notes.find((note) => note.id === id);
-      if (!noteToArchive) return {};
+  deleteNote: (id) => {
+    const noteToArchive = get().notes.find((note) => note.id === id);
+    if (!noteToArchive) return;
+    set((state) => ({
+      notes: state.notes.filter((note) => note.id !== id),
+      archivedNotes: [...state.archivedNotes, noteToArchive],
+    }));
+  },
 
-      return {
-        notes: state.notes.filter((note) => note.id !== id),
-        archivedNotes: [...state.archivedNotes, noteToArchive],
-      };
-    }),
-
-  restoreNote: (id) =>
-    set((state) => {
-      const noteToRestore = state.archivedNotes.find((note) => note.id === id);
-      if (!noteToRestore) return {};
-
-      return {
-        archivedNotes: state.archivedNotes.filter((note) => note.id !== id),
-        notes: [...state.notes, noteToRestore],
-      };
-    }),
+  restoreNote: (id) => {
+    const noteToRestore = get().archivedNotes.find((note) => note.id === id);
+    if (!noteToRestore) return;
+    set((state) => ({
+      archivedNotes: state.archivedNotes.filter((note) => note.id !== id),
+      notes: [...state.notes, noteToRestore],
+    }));
+  },
 
   permanentlyDeleteNote: (id) =>
     set((state) => ({

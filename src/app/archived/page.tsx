@@ -1,11 +1,13 @@
 'use client';
 
-import { ArchivedNotes } from "@/App"; 
+import React from "react";
+import NotesList from "@/components/NotesList";
+import { ArchivedNotes } from "@/pages/ArchivedNotes"; 
 
-export default function ArchivedPage() {
+export default function App() {
   return (
-    <div className="container my-4">
-      <h1>Архив</h1>
+    <div style={{ display: "flex", gap: "3rem", padding: "2rem" }}>
+      <NotesList />
       <ArchivedNotes />
     </div>
   );
