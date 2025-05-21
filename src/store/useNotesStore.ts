@@ -1,46 +1,62 @@
 import { create } from "zustand";
 
-export type Note = {
+interface Note {
   id: number;
   title: string;
   content: string;
   categoryId: number;
-};
+}
 
-export type Category = {
-  id: number;
-  name: string;
-};
-
-type NotesState = {
+interface NotesState {
   notes: Note[];
-  categories: Category[];
-  addNote: (note: Omit<Note, "id">) => void;
-  addCategory: (name: string) => void;
-  editCategory: (id: number, name: string) => void;
-  deleteCategory: (id: number) => void;
-};
+  archivedNotes: Note[];
+  addNote: (note: Note) => void;
+  deleteNote: (id: number) => void; // удалить из заметок и переместить в архив
+  restoreNote: (id: number) => void; // вернуть из архива в заметки
+  permanentlyDeleteNote: (id: number) => void; // окончательно удалить из архива
+  updateNote: (updatedNote: Note) => void;
+}
 
 export const useNotesStore = create<NotesState>((set) => ({
   notes: [],
-  categories: [],
-  addNote: (note) => {
-    const newNote = { id: Date.now(), ...note };
-    set((state) => ({ notes: [...state.notes, newNote] }));
-  },
-  addCategory: (name) => {
-    const newCategory = { id: Date.now(), name };
-    set((state) => ({ categories: [...state.categories, newCategory] }));
-  },
-  editCategory: (id, name) =>
+  archivedNotes: [],
+
+  addNote: (note) =>
     set((state) => ({
-      categories: state.categories.map((cat) =>
-        cat.id === id ? { ...cat, name } : cat
-      ),
+      notes: [...state.notes, note],
     })),
-  deleteCategory: (id) =>
+
+  deleteNote: (id) =>
+    set((state) => {
+      const noteToArchive = state.notes.find((note) => note.id === id);
+      if (!noteToArchive) return {};
+
+      return {
+        notes: state.notes.filter((note) => note.id !== id),
+        archivedNotes: [...state.archivedNotes, noteToArchive],
+      };
+    }),
+
+  restoreNote: (id) =>
+    set((state) => {
+      const noteToRestore = state.archivedNotes.find((note) => note.id === id);
+      if (!noteToRestore) return {};
+
+      return {
+        archivedNotes: state.archivedNotes.filter((note) => note.id !== id),
+        notes: [...state.notes, noteToRestore],
+      };
+    }),
+
+  permanentlyDeleteNote: (id) =>
     set((state) => ({
-      categories: state.categories.filter((cat) => cat.id !== id),
-      notes: state.notes.filter((note) => note.categoryId !== id), // удалить заметки с удалённой категорией (опционально)
+      archivedNotes: state.archivedNotes.filter((note) => note.id !== id),
+    })),
+
+  updateNote: (updatedNote) =>
+    set((state) => ({
+      notes: state.notes.map((note) =>
+        note.id === updatedNote.id ? updatedNote : note
+      ),
     })),
 }));

@@ -16,10 +16,10 @@ export function ArchivedNotes() {
           <h5>{note.title}</h5>
           <p>{note.content}</p>
           <div>
-            <button onClick={() => restoreNote(note.id)} className="btn btn-sm btn-success me-2">
+            <button onClick={() => restoreNote(note.id)} className="btn btn-success btn-sm me-2">
               Восстановить
             </button>
-            <button onClick={() => permanentlyDeleteNote(note.id)} className="btn btn-sm btn-danger">
+            <button onClick={() => permanentlyDeleteNote(note.id)} className="btn btn-danger btn-sm">
               Удалить навсегда
             </button>
           </div>

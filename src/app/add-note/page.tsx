@@ -3,27 +3,31 @@
 import Link from "next/link";
 import NoteForm from "@/components/note/NoteForm";
 import { useNotesStore } from "@/store/useNotesStore";
-import { useCategoriesStore } from "@/store/useCategoriesStore"; // импортируем стор категорий
+import { useCategoriesStore } from "@/store/useCategoriesStore";
 import { useRouter } from "next/navigation";
 
 export default function AddNotePage() {
   const addNote = useNotesStore((state) => state.addNote);
-  const categories = useCategoriesStore((state) => state.categories); // получаем категории
+  const notes = useNotesStore((state) => state.notes); // получаем текущие заметки
+  const categories = useCategoriesStore((state) => state.categories);
   const router = useRouter();
 
-  // Обработчик добавления заметки — теперь с categoryId
   const handleAddNote = (note: { title: string; content: string; categoryId: number }) => {
-    addNote(note);
-    router.push("/notes"); // возвращаемся на страницу со списком заметок
+    const newId = notes.length > 0 ? Math.max(...notes.map(n => n.id)) + 1 : 1;
+
+    addNote({
+      id: newId,
+      ...note,
+    });
+
+    router.push("/notes");
   };
 
   return (
     <div className="max-w-2xl mx-auto py-6">
       <h2 className="text-xl font-semibold mb-4">Добавить заметку</h2>
-      {/* Передаём категории в NoteForm */}
       <NoteForm onSubmit={handleAddNote} categories={categories} />
 
-      {/* Кнопка «Все заметки» внизу справа */}
       <div className="mt-4 d-flex justify-content-end">
         <Link href="/notes" className="btn btn-outline-primary">
           Все заметки

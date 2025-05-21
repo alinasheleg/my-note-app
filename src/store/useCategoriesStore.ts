@@ -1,6 +1,7 @@
 // src/store/useCategoriesStore.ts
 import { create } from "zustand";
 
+
 export type Category = {
   id: number;
   name: string;

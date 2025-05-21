@@ -1,6 +1,6 @@
 'use client';
 
-import { Category } from "@/store/useNotesStore"; 
+import { Category } from "@/store/useCategoriesStore";
 import CategoryItem from "./CategoryItem";
 
 type Props = {

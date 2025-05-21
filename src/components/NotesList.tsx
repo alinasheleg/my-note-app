@@ -7,12 +7,23 @@ import { useCategoriesStore } from "@/store/useCategoriesStore";
 export default function NotesList() {
   const notes = useNotesStore((state) => state.notes);
   const categories = useCategoriesStore((state) => state.categories);
+  const deleteNote = useNotesStore((state) => state.deleteNote);
+  const updateNote = useNotesStore((state) => state.updateNote);
 
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | "all">("all");
 
   const filteredNotes = selectedCategoryId === "all"
     ? notes
     : notes.filter((note) => note.categoryId === selectedCategoryId);
+
+  // Пример функции для редактирования (показываю простой prompt)
+  const handleEdit = (note: typeof notes[0]) => {
+    const newTitle = prompt("Измените заголовок заметки", note.title);
+    const newContent = prompt("Измените содержимое заметки", note.content);
+    if (newTitle !== null && newContent !== null) {
+      updateNote({ ...note, title: newTitle, content: newContent });
+    }
+  };
 
   return (
     <div>
@@ -67,6 +78,21 @@ export default function NotesList() {
                 <small className="text-muted">
                   Категория: <strong>{category?.name || "Без категории"}</strong>
                 </small>
+
+                <div className="mt-3">
+                  <button
+                    className="btn btn-sm btn-outline-primary me-2"
+                    onClick={() => handleEdit(note)}
+                  >
+                    Редактировать
+                  </button>
+                  <button
+                    className="btn btn-sm btn-outline-danger"
+                    onClick={() => deleteNote(note.id)}
+                  >
+                    Удалить
+                  </button>
+                </div>
               </li>
             );
           })}
