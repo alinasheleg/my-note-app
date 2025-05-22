@@ -1,13 +1,13 @@
 import { create } from "zustand";
 
-interface Note {
+export interface Note {
   id: number;
   title: string;
   content: string;
   categoryId: number;
 }
 
-interface NotesState {
+export interface NotesState {
   notes: Note[];
   archivedNotes: Note[];
   addNote: (note: Note) => void;
@@ -15,12 +15,14 @@ interface NotesState {
   restoreNote: (id: number) => void;
   permanentlyDeleteNote: (id: number) => void;
   updateNote: (updatedNote: Note) => void;
+
+  // Добавляем сеттеры для загрузки из localStorage
+  setNotes: (notes: Note[]) => void;
+  setArchivedNotes: (archivedNotes: Note[]) => void;
 }
 
 export const useNotesStore = create<NotesState>((set, get) => ({
-  notes: [
-
-  ],
+  notes: [],
   archivedNotes: [],
 
   addNote: (note) =>
@@ -57,4 +59,8 @@ export const useNotesStore = create<NotesState>((set, get) => ({
         note.id === updatedNote.id ? updatedNote : note
       ),
     })),
+
+  // Сеттеры для загрузки из localStorage
+  setNotes: (notes) => set({ notes }),
+  setArchivedNotes: (archivedNotes) => set({ archivedNotes }),
 }));

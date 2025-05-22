@@ -17,7 +17,7 @@ export default function NotesList() {
     ? notes
     : notes.filter((note) => note.categoryId === selectedCategoryId);
 
-  // Пример функции для редактирования (показываю простой prompt)
+  // Пример функции для редактирования (простой prompt)
   const handleEdit = (note: typeof notes[0]) => {
     const newTitle = prompt("Измените заголовок заметки", note.title);
     const newContent = prompt("Измените содержимое заметки", note.content);
@@ -81,19 +81,19 @@ export default function NotesList() {
                 </small>
 
                 <div className="mt-3">
-                 <Link href={`/notes/${note.id}`} className="btn btn-sm btn-outline-primary me-2">
-  Редактировать
-</Link>
-                 <button
-  className="btn btn-sm btn-outline-danger"
-  onClick={() => {
-    if (confirm("Вы уверены, что хотите удалить эту заметку? Она попадёт в архив.")) {
-      deleteNote(note.id);
-    }
-  }}
->
-  Удалить
-</button>
+                  <Link href={`/notes/${note.id}`} className="btn btn-sm btn-outline-primary me-2">
+                    Редактировать
+                  </Link>
+                  <button
+                    className="btn btn-sm btn-outline-danger"
+                    onClick={() => {
+                      if (confirm("Вы уверены, что хотите удалить эту заметку? Она попадёт в архив.")) {
+                        deleteNote(note.id);
+                      }
+                    }}
+                  >
+                    Удалить
+                  </button>
                 </div>
               </li>
             );
